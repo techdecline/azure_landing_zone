@@ -1,0 +1,31 @@
+﻿using Pulumi;
+using Pulumi.AzureNative.Resources;
+using System.Collections.Generic;
+using System.Text.Json;
+
+
+return await Pulumi.Deployment.RunAsync(() =>
+{
+    // Grab some values from the Pulumi stack configuration (or use defaults)
+    var projCfg = new Pulumi.Config();
+    var configAzureNative = new Pulumi.Config("azure-native");
+    var location = configAzureNative.Require("location");
+    var commonArgs = new LandingZoneArgs(Pulumi.Deployment.Instance.StackName, location, "aks");
+
+
+    // The next two configuration values are required (no default can be provided)
+    var subnetArr = projCfg.RequireObject<JsonElement>("subnets");
+    var vnetCidr = projCfg.Require("virtual-network-cidr");
+
+    // Generate Names
+    var resourceGroupName = $"rg-{commonArgs.Application}-{commonArgs.LocationShort}-{commonArgs.EnvironmentShort}";
+    var vnetName = $"vnet-{commonArgs.Application}-{commonArgs.LocationShort}-{commonArgs.EnvironmentShort}";
+    var clusterName = $"aks-{commonArgs.Application}-{commonArgs.LocationShort}-{commonArgs.EnvironmentShort}";
+    var lawName = $"law-{commonArgs.Application}-{commonArgs.LocationShort}-{commonArgs.EnvironmentShort}";
+    var managedGrafanaName = $"grf-{commonArgs.Application}-{commonArgs.LocationShort}-{commonArgs.EnvironmentShort}";
+    var agwName = $"agw-{commonArgs.Application}-{commonArgs.LocationShort}-{commonArgs.EnvironmentShort}";
+    var pipName = $"pip-{commonArgs.Application}-{commonArgs.LocationShort}-{commonArgs.EnvironmentShort}";
+
+    // Instantiate LandingZone Class for Resource Group and Virtual Network
+    var landingZone = new LandingZone(resourceGroupName, vnetCidr, vnetName, subnetArr);
+});

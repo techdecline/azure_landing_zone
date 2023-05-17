@@ -1,0 +1,8 @@
+config:
+  azure-native:location: westeurope
+  azure_landing_zone:subnets:
+  - cidr: 10.0.0.0/22
+    name: shared_subnet
+  - cidr: 10.0.4.0/22
+    name: aks_subnet
+  azure_landing_zone:virtual-network-cidr: 10.0.0.0/16
