@@ -32,7 +32,21 @@ class AppLandingZone : Stack {
             // Instantiate Monitoring Class for LAW Deployment
             var monitoring = new Monitoring(lawName, managedGrafanaName, mgmtGroupId, landingZone.ResourceGroupName);
             LogAnalyticsWorkspaceId = monitoring.LogAnalyticsWorkspaceId;
+
+            // Looking for GatewaySubnet
+            string gatewaySubnet = string.Empty;
+            foreach (var subnet in subnetArr.EnumerateArray())
+            {
+                if (subnet.GetProperty("name").GetString().Contains("agw"))
+                {
+                    Pulumi.Log.Info($"Subnet {subnet.GetProperty("name").GetString()} will be used for AGW");
+                    gatewaySubnet = subnet.GetProperty("name").GetString();
+                    break;
+                }
+            }
+            GatewaySubnetId = landingZone.SubnetDictionary.Apply(subnetId => subnetId[gatewaySubnet]);
         }
 
         [Output] public Output<string> LogAnalyticsWorkspaceId { get; set; }
+        [Output] public Output<string> GatewaySubnetId { get; set; }
     }
