@@ -6,3 +6,5 @@ config:
   - cidr: 10.0.4.0/22
     name: aks_subnet
   azure_landing_zone:virtual-network-cidr: 10.0.0.0/16
+  azure_landing_zone:mgmtGroupId: ab937967-4396-4329-93fe-54a4e74f5271
+

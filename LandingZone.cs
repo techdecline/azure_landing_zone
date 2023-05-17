@@ -17,8 +17,8 @@ class LandingZone
             {
                 AddressPrefixes = new[]
                 {
-                vnetCidr,
-            },
+                    vnetCidr,
+                },
             },
             ResourceGroupName = resourceGroup.Name,
         });
